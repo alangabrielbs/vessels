@@ -1,8 +1,18 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import {
+  MapContainer,
+  Popup,
+  TileLayer,
+  Marker,
+  MapConsumer
+} from 'react-leaflet'
+
+import L from 'leaflet'
 
 import * as S from './styles'
 
-type Vessel = {
+import { mapView } from './config'
+
+export type Vessel = {
   complete: string
   country: string
   from: string
@@ -18,20 +28,6 @@ type Vessel = {
 
 export type MapProps = {
   vessels?: Vessel[]
-}
-
-const vesselMock = {
-  complete: '73.75%',
-  country: 'Eritrea',
-  from: 'Madagascar',
-  id: '8269764b-1bb5-4948-be08-0fc56f439e08',
-  latitude: 31.32217553803138,
-  longitude: 32.239130538031375,
-  name: 'Chang-Fisher',
-  size: 214,
-  speed: '25 MPH',
-  to: 'Libyan Arab Jamahiriya',
-  type: 'tanker'
 }
 
 const MAPBOX_API_KEY = process.env.NEXT_PUBLIC_MAPBOX_API_KEY
@@ -52,30 +48,88 @@ const CustomTileLayer = () => {
   )
 }
 
-const Map = ({ vessels = [vesselMock] }: MapProps) => {
+const Map = ({ vessels = [] }: MapProps) => {
+  const isOneVessel = vessels.length === 1
+  const [firstVessel] = vessels
+
   return (
     <S.MapWrapper>
       <MapContainer
-        center={[31.322175227733798, 32.239130227733796]}
-        zoom={5}
+        center={mapView.center}
+        zoom={mapView.zoom}
         minZoom={3}
-        maxBounds={[
-          [-180, 80],
-          [180, -180]
-        ]}
+        maxBounds={mapView.maxBounds}
         style={{ height: '100%', width: '100%' }}
+        doubleClickZoom
+        tap={false}
       >
+        <MapConsumer>
+          {(map) => {
+            const width =
+              window.innerWidth ||
+              document.documentElement.clientWidth ||
+              document.body.clientWidth
+
+            if (width < 768) {
+              map.setMinZoom(2)
+            }
+
+            if (isOneVessel) {
+              map.panTo(
+                new L.LatLng(firstVessel.latitude, firstVessel.longitude)
+              )
+            }
+
+            map.addEventListener('dragend', () => {
+              mapView.setView(map.getCenter())
+            })
+            map.addEventListener('zoomend', () => {
+              mapView.setView(map.getCenter(), map.getZoom())
+            })
+
+            return null
+          }}
+        </MapConsumer>
         <CustomTileLayer />
 
-        {vessels?.map(({ id, latitude, longitude, name }) => {
-          return (
-            <Marker
-              key={`vessel-${id}`}
-              position={[latitude, longitude]}
-              title={name}
-            />
-          )
-        })}
+        {vessels?.map(
+          ({
+            id,
+            latitude,
+            longitude,
+            name,
+            country,
+            complete,
+            from,
+            to,
+            speed
+          }) => {
+            return (
+              <Marker
+                icon={L.icon({
+                  iconUrl: 'img/marker.png',
+                  iconSize: new L.Point(55, 55),
+                  iconAnchor: new L.Point(26, 0)
+                })}
+                key={`vessel-${id}`}
+                position={[latitude, longitude]}
+                title={name}
+              >
+                <Popup>
+                  Name: {name} <br />
+                  Country: {country} <br />
+                  From: {from} <br />
+                  To: {to} <br />
+                  Speed: {speed} <br />
+                  Complete: {complete} <br />
+                  Position: <br />
+                  Latitude: {latitude} <br />
+                  Longitude: {longitude}
+                </Popup>
+              </Marker>
+            )
+          }
+        )}
       </MapContainer>
     </S.MapWrapper>
   )

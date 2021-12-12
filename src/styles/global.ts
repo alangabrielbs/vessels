@@ -13,6 +13,7 @@ const GlobalStyles = createGlobalStyle`
 
   html, body, #__next {
     height: 100%;
+    font-size: 16px;
   }
 
   body {
