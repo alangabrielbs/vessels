@@ -12,6 +12,6 @@ export const getStaticProps = async () => {
     props: {
       vessels
     },
-    revalidate: 60
+    revalidate: 5
   }
 }
