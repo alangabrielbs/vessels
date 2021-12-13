@@ -2,11 +2,10 @@ import { useState } from 'react'
 
 import Header from 'components/Header'
 import { Vessel } from 'components/Map'
+import VideoStream from 'components/VideoStream'
 import dynamic from 'next/dynamic'
 
 const Map = dynamic(() => import('components/Map'), { ssr: false })
-
-import * as S from './styles'
 
 export type HomeProps = {
   vessels: Vessel[]
@@ -34,7 +33,7 @@ const Home = ({ vessels: data }: HomeProps) => {
 
   return (
     <>
-      <S.Embed src="http://localhost:3000/video/stream" />
+      <VideoStream />
       <Map vessels={listOfvessels} />
       <Header onChange={handleSearch} searchValue={searchValue} />
     </>

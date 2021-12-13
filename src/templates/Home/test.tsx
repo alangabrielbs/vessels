@@ -20,6 +20,15 @@ jest.mock('components/Header', () => {
   }
 })
 
+jest.mock('components/VideoStream', () => {
+  return {
+    __esModule: true,
+    default: function Mock() {
+      return <div data-testid="Mock VideoStream"></div>
+    }
+  }
+})
+
 describe('<Home />', () => {
   it('should render correctly all components', async () => {
     render(<Home vessels={[]} />)
@@ -28,5 +37,6 @@ describe('<Home />', () => {
       expect(screen.getByTestId(/mock Map/i)).toBeInTheDocument()
     })
     expect(screen.getByTestId(/mock Header/i)).toBeInTheDocument()
+    expect(screen.getByTestId(/mock VideoStream/i)).toBeInTheDocument()
   })
 })
