@@ -6,7 +6,7 @@ import * as S from './styles'
 
 const VideoStream = () => {
   useEffect(() => {
-    const url = 'ws://localhost:9999'
+    const url = process.env.NEXT_PUBLIC_URL || 'ws://localhost:9999'
     new JSMpeg.VideoElement('#wrapper', url)
   }, [])
 
