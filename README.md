@@ -6,10 +6,10 @@ Preview: https://vessels.alangabriel.dev/ (Sem Live Stream por estar na Vercel)
 
 * Você precisa ter o `ffmpeg` em sua maquina para rodar o projeto.
 
-1 - Clone esse repositorio
-2 - Instale as dependencias com `yarn install` ou `npm install`
-3 - Rodar o projeto com `yarn dev` ou `npm run dev`
-4 - Acesse `http://localhost:3000` e verá a aplicação rodando
+1. Clone esse repositorio
+2. Instale as dependencias com `yarn install` ou `npm install`
+3. Rodar o projeto com `yarn dev` ou `npm run dev`
+4. Acesse `http://localhost:3000` e verá a aplicação rodando
 
 
 Este projeto usa muitas coisas como:
